@@ -1,4 +1,22 @@
 var arrProducts = [];
+var showForm = false;
+var editingItem; 
+
+function toggleForm() {
+  showForm = !showForm;
+  $("#form").remove();
+  $("#products").toggle();
+
+  if (showForm) {
+    $.ajax({
+      url: "welcome/form",
+      method: "GET",
+      data: { id: editingItem }
+    }).done(function(html) {
+      $("#toggle").after(html);
+    });
+  }
+}
 
 $(document).ready(function() {
   $.ajax({
@@ -7,6 +25,17 @@ $(document).ready(function() {
   }).done(function(products) {
     arrProducts = products 
     show(arrProducts)
+  });
+
+  $("#toggle").on("click", function() {
+    toggleForm();
+  });
+
+  $(document).on("click", "#edit-game", function() {
+    editingGame = $(this)
+      .siblings(".game-item")
+      .data().id;
+    toggleForm();
   });
 
   $('.submit').on('click', function() {
